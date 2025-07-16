@@ -43,12 +43,19 @@ let package = Package(
     ],
     dependencies: dependencies,
     targets: [
-        .systemLibrary(
-            name: "GRDBSQLite",
-            providers: [.apt(["libsqlite3-dev"])]),
+        .target(
+          name: "CSQLite",
+          path: "CSQLite",
+          publicHeadersPath: ".",
+          cSettings: [
+            .define("SQLITE_THREADSAFE", to: "1"),
+            .define("SQLITE_ENABLE_FTS5"),
+            .define("SQLITE_ENABLE_JSON1")
+          ]
+        ),
         .target(
             name: "GRDB",
-            dependencies: ["GRDBSQLite"],
+            dependencies: ["CSQLite"],
             path: "GRDB",
             resources: [.copy("PrivacyInfo.xcprivacy")],
             cSettings: cSettings,
